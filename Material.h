@@ -17,8 +17,8 @@ public:
 	//ÑÕÉ«
 	vec3 color;
 	Material();
-	Material(float _light, float _specular, float _diffuse, float _refract, float _transparent) :
-		light(_light), specular(_specular), transparent(_transparent), diffuse(_diffuse), refract(_refract) {}
+	Material(float _light, float _specular, float _diffuse, float _refract, float _transparent,vec3 _color) :
+		light(_light), specular(_specular), transparent(_transparent), diffuse(_diffuse), refract(_refract),color(_color) {}
 	~Material();
 };
 

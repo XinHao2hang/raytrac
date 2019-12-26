@@ -14,6 +14,8 @@ public:
 	//²ÄÖÊ
 	Material m;
 	virtual Ray intersect(Ray ray) { return Ray(vec3(0, 0, 0), vec3(0, 0, 0), 0, vec3(0, 0, 0), nullptr); }
+	virtual Ray sample(Ray out, Ray reflact, Ray refract); 
+	virtual vec3 getNormal(vec3 _vector) { return vec3(0, 0, 0); }
 	Polygon();
 	~Polygon();
 };
