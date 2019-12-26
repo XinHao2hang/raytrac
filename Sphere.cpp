@@ -14,7 +14,7 @@ vec3 Sphere::getNormal(vec3 _vector)
 
 Ray Sphere::intersect(Ray ray)
 {
-	Ray result(ray.direction,ray.position,ray.intensity, ray.color, nullptr);
+	Ray result(ray.direction,ray.position,ray.intensity, vec3(0,0,0), nullptr);
 	//计算球和光线的向量
 	vec3 v = ray.position - center;
 	//如果光源在球体表面或者内部，必然与球面相交，并且光源方向指向球心
@@ -23,8 +23,8 @@ Ray Sphere::intersect(Ray ray)
 		result.polygon = this;	
 		float cosa = glm::dot(normalize(abs(center - ray.position)), normalize(ray.direction));//normalize(abs((center - ray.position))*normalize(ray.direction));
 		result.distance = 2 * radius * cosa;
-		result.position = ray.getEndPoint(result.distance);
-		result.normal = -normalize(result.position - center);
+		result.end = ray.getEndPoint(result.distance);
+		result.normal = -normalize(result.end - center);
 		return result;
 	}
 	float disSubR = dot(v , v) - (radius * radius);
@@ -37,8 +37,8 @@ Ray Sphere::intersect(Ray ray)
 		{
 			result.polygon = this;
 			result.distance = -ray_v_dot - sqrt(discr);
-			result.position = ray.getEndPoint(result.distance);
-			result.normal = normalize(result.position - center);
+			result.end = ray.getEndPoint(result.distance);
+			result.normal = normalize(result.end - center);
 			return result;
 		}
 	}

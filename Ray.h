@@ -9,8 +9,9 @@ public:
 	void* polygon = nullptr;//出发元素指针
 	float distance = FLT_MAX;//光线长度
 	vec3 normal;//所在点法向量
-	//光线起点
+	//光线起点(这里所说的光线是逆向的)
 	vec3 position;
+	vec3 end;
 	//光线方向
 	vec3 direction;
 	//光线颜色
