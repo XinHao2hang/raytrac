@@ -7,6 +7,7 @@
 #include "Sphere.h"
 #include "Camera.h"
 #include "Material.h"
+#include "Plane.h"
 using namespace std;
 using namespace cv;
 using namespace glm;
@@ -20,7 +21,7 @@ Ray rayTrac(Ray ray,vector<Polygon*> s,int times)
 	{
 		//找到最近的物体
 		Ray rayTemp = obj->intersect(ray);
-		if (rayTemp.distance < minDistance )
+		if (rayTemp.polygon && rayTemp.distance < minDistance )
 		{
 			minDistance = rayTemp.distance;
 			r = rayTemp;
@@ -30,8 +31,8 @@ Ray rayTrac(Ray ray,vector<Polygon*> s,int times)
 		return Ray(vec3(0, 0, 0), vec3(0, 0, 0), 0, vec3(0, 0, 0), nullptr);
 	//计算反射光线
 	vec3 reflectRayNormal = r.normal;
-	//if (dot(r.direction , reflectRayNormal) > 0)
-	//	reflectRayNormal = -reflectRayNormal;
+	/*if (dot(r.direction , reflectRayNormal) > 0)
+		reflectRayNormal = -reflectRayNormal;*/
 	//构造反射光线
 	Ray reflectRay = Ray(normalize(r.direction - (2 * dot(r.direction, reflectRayNormal)) * reflectRayNormal),r.end,0,vec3(0,0,0),nullptr);
 	//获得反射光线方向
@@ -54,15 +55,17 @@ int main()
 {
 	Camera camera(vec3(0, 10, 10), vec3(0, 0, -1), vec3(0, 1, 0), 90);
 	Mat img = Mat::zeros(Size(512, 512), CV_8UC3);
-	Material m0(0.8,0.8,0.5,0,0,vec3(255,255,0));
-	Material m1(0.8, 0.8, 0.5, 0, 0, vec3(0, 0, 255));
-	Sphere s0(vec3(12, 10, -20), 10,m0);
-	Sphere s1(vec3(-12, 10, -20), 10, m1);
+	Material m0(0.8,0.5,0.5,0,0,vec3(255,255,0));
+	Material m1(0.8, 0.5, 0.5, 0, 0, vec3(0, 0, 255));
+	Material m2(0.8, 0.5, 0.5, 0, 0, vec3(255, 255, 255));
+	Sphere s0(vec3(12, 15, -20), 10,m0);
+	Sphere s1(vec3(-12, 15, -20), 10, m1);
+	Plane p0(vec3(0,1,0),4,m2);
 	for (int i = 0; i < img.rows; i++)
 	{
 		for (int j = 0; j < img.cols; j++)
 		{
-			vec3 color = render(i, j, img.rows, img.cols, {&s0,&s1},camera).color;
+			vec3 color = render(i, j, img.rows, img.cols, { &p0,&s0,&s1},camera).color;
 			if (color.z > 255)
 				color.z = 255;
 			if (color.y > 255)
@@ -70,7 +73,10 @@ int main()
 			if (color.x > 255)
 				color.x = 255;
 			img.at<Vec3b>(i, j) = Vec3b(color.z, color.y, color.x);
+			
 		}
+		imshow("img", img);
+			waitKey(1);
 	}
 	imshow("img",img);
 	imwrite("1.jpg",img);
