@@ -2,12 +2,14 @@
 #include <opencv2/opencv.hpp>
 #include <glm.hpp>
 #include <vector>
+#include <ctime>
 #include "Polygon.h"
 #include "Ray.h"
 #include "Sphere.h"
 #include "Camera.h"
 #include "Material.h"
 #include "Plane.h"
+#include "Triangle.h"
 using namespace std;
 using namespace cv;
 using namespace glm;
@@ -31,8 +33,8 @@ Ray rayTrac(Ray ray,vector<Polygon*> s,int times)
 		return Ray(vec3(0, 0, 0), vec3(0, 0, 0), 0, vec3(0, 0, 0), nullptr);
 	//计算反射光线
 	vec3 reflectRayNormal = r.normal;
-	/*if (dot(r.direction , reflectRayNormal) > 0)
-		reflectRayNormal = -reflectRayNormal;*/
+	//if (dot(r.direction , reflectRayNormal) > 0)
+	//	reflectRayNormal = -reflectRayNormal;
 	//构造反射光线
 	Ray reflectRay = Ray(normalize(r.direction - (2 * dot(r.direction, reflectRayNormal)) * reflectRayNormal),r.end,0,vec3(0,0,0),nullptr);
 	//获得反射光线方向
@@ -54,18 +56,23 @@ Ray render(int i, int j, int rows, int cols, vector<Polygon*> s, Camera cam)
 int main()
 {
 	Camera camera(vec3(0, 10, 10), vec3(0, 0, -1), vec3(0, 1, 0), 90);
-	Mat img = Mat::zeros(Size(512, 512), CV_8UC3);
+	Mat img = Mat::zeros(Size(1024, 1024), CV_8UC3);
 	Material m0(0.8,0.5,0.5,0,0,vec3(255,255,0));
 	Material m1(0.8, 0.5, 0.5, 0, 0, vec3(0, 0, 255));
 	Material m2(0.8, 0.5, 0.5, 0, 0, vec3(255, 255, 255));
 	Sphere s0(vec3(12, 15, -20), 10,m0);
 	Sphere s1(vec3(-12, 15, -20), 10, m1);
 	Plane p0(vec3(0,1,0),4,m2);
+	Triangle triangle0(vec3(5,5,0),vec3(-5,-5,0),vec3(5,-5,0),m0);
+	triangle0.setPosition(vec3(0, 10, -10));
+	triangle0.setTransform(mat3(vec3(1,0,0),vec3(0,1,0),vec3(0,0,1)));
+	triangle0.move();
+	float start = clock();
 	for (int i = 0; i < img.rows; i++)
 	{
 		for (int j = 0; j < img.cols; j++)
 		{
-			vec3 color = render(i, j, img.rows, img.cols, { &p0,&s0,&s1},camera).color;
+			vec3 color = render(i, j, img.rows, img.cols, {&triangle0,&s0,&s1,&p0},camera).color;
 			if (color.z > 255)
 				color.z = 255;
 			if (color.y > 255)
@@ -73,11 +80,12 @@ int main()
 			if (color.x > 255)
 				color.x = 255;
 			img.at<Vec3b>(i, j) = Vec3b(color.z, color.y, color.x);
-			
 		}
-		imshow("img", img);
-			waitKey(1);
+		/*imshow("img", img);
+			waitKey(1);*/
 	}
+	float end = clock();
+	cout << end - start << "ms" << endl;
 	imshow("img",img);
 	imwrite("1.jpg",img);
 	waitKey(0);

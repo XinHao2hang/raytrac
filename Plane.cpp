@@ -9,9 +9,9 @@ Plane::Plane()
 
 Ray Plane::intersect(Ray ray)
 {
-	Ray result(ray.direction, ray.position, ray.intensity,vec3(0,0,0), nullptr);
+	Ray result(ray.direction, ray.position, ray.intensity,ray.color, nullptr);
 	//≈–∂œπ‚‘¥Œª÷√
-	if ((dot(normalize(ray.position - (normal * normal_distance)), normal)) <= 0.0001)
+	if (abs(dot(normalize(ray.position - (normal * normal_distance)), normal)) <= 0.0001)
 		return result;
 	//Ray result(ray.direction, ray.position, ray.intensity, ray.color, nullptr);
 	result.distance = FLT_MAX;
@@ -20,7 +20,7 @@ Ray Plane::intersect(Ray ray)
 		return result;
 	result.normal = normal;
 	result.distance = light_d;
-	result.end = ray.getEndPoint(light_d);
+	result.end = result.getEndPoint(light_d);
 	result.polygon = this;
 	return result;
 }
