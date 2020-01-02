@@ -1,10 +1,11 @@
 #pragma once
 #include "Polygon.h"
+
 class Plane : public Polygon
 {
 public:
 	Plane();
-	Plane(vec3 _normal, float _normal_distance, Material _m) :normal(_normal), normal_distance(_normal_distance) { m = _m; }
+	Plane(vec3 _normal, float _normal_distance, Material * _m) :normal(_normal), normal_distance(_normal_distance) { m = _m; }
 	//平面法向量
 	vec3 normal;
 	//法向量上长度

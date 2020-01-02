@@ -24,7 +24,7 @@ Ray Sphere::intersect(Ray ray)
 		float cosa = glm::dot(normalize(abs(center - ray.position)), normalize(ray.direction));//normalize(abs((center - ray.position))*normalize(ray.direction));
 		result.distance = 2 * radius * cosa;
 		result.end = ray.getEndPoint(result.distance);
-		result.normal = -normalize(result.end - center);
+		result.normal = -normalize(result.end.position - center);
 		return result;
 	}
 	float disSubR = dot(v , v) - (radius * radius);
@@ -38,7 +38,7 @@ Ray Sphere::intersect(Ray ray)
 			result.polygon = this;
 			result.distance = -ray_v_dot - sqrt(discr);
 			result.end = ray.getEndPoint(result.distance);
-			result.normal = normalize(result.end - center);
+			result.normal = normalize(result.end.position - center);
 			return result;
 		}
 	}
