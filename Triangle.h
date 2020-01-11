@@ -28,6 +28,8 @@ public:
 	vec2 getUVCoord(vec5 A,vec5 B,vec5 C,vec5 T);
 	//获取法向量
 	virtual vec3 getNormal(vec3 _vector);
+	bool onTriangle0(vec3 A,vec3 B,vec3 C,vec3 O);
+	bool onTriangle1(vec3 A, vec3 B, vec3 C, vec3 O);
 	~Triangle();
 };
 
