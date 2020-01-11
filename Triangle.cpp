@@ -13,7 +13,7 @@ void Triangle::setPosition(vec3 _pos)
 	//wA = transforms * A + position;
 	//wB = transforms * B + position;
 	//wC = transforms * C + position;
-
+	
 }
 
 void Triangle::setTransform(mat3 _mat)
@@ -27,7 +27,10 @@ void Triangle::move()
 	wA = transforms * A.position + position;
 	wB = transforms * B.position + position;
 	wC = transforms * C.position + position;
+	//更新平面参数
 	normal_distance = dot(normal, wA.position);
+	//更新法向量
+	normal = normalize(cross(wA.position - wB.position, wB.position - wC.position));
 }
 
 Ray Triangle::intersect(Ray ray)
@@ -51,7 +54,7 @@ Ray Triangle::intersect(Ray ray)
 	vec3 sb = normalize(cross(b, c));
 	vec3 sc = normalize(cross(c, a));
 	//这里说明点在三角面是上
-	if (dot(sa, sb) > 0.999 && dot(sb, sc) > 0.999 && dot(sc, sa) > 0.999)
+	if (dot(sa, sb) > 0.9999 && dot(sb, sc) > 0.9999 && dot(sc, sa) > 0.9999)
 	{
 		//计算点所在的纹理坐标
 		vec5 p_end;
@@ -75,6 +78,12 @@ vec2 Triangle::getUVCoord(vec5 A, vec5 B, vec5 C, vec5 T)
 	float area_b = sqrt(pb * (pb - lB) * (pb - la) * (pb - lc));
 	float area_c = area - area_a - area_b;
 	return (area_a * A.textureUV + area_b * B.textureUV + area_c * C.textureUV) / area;
+}
+
+vec3 Triangle::getNormal(vec3 _vector)
+{
+
+	return normal;
 }
 
 Triangle::~Triangle()

@@ -19,11 +19,15 @@ public:
 	vec5 wA, wB, wC;
 	//面积
 	float area,lA,lB,lC;
+	//
 	void setPosition(vec3 _pos);
 	void setTransform(mat3 _mat);
+	//move在显示之前调用，不然不会更新
 	void move();
 	virtual Ray intersect(Ray ray);
 	vec2 getUVCoord(vec5 A,vec5 B,vec5 C,vec5 T);
+	//获取法向量
+	virtual vec3 getNormal(vec3 _vector);
 	~Triangle();
 };
 

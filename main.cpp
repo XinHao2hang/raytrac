@@ -12,6 +12,7 @@
 #include "Plane.h"
 #include "Triangle.h"
 #include "HighMaterial.h"
+#include "Triangles.h"
 using namespace std;
 using namespace cv;
 using namespace glm;
@@ -59,26 +60,31 @@ Ray render(int i, int j, int rows, int cols, vector<Polygon*> s, Camera cam)
 int main()
 {
 	Camera camera(vec3(0, 10, 10), vec3(0, 0, -1), vec3(0, 1, 0), 90);
-	Mat img = Mat::zeros(Size(512, 512), CV_8UC3);
+	Mat img = Mat::zeros(Size(1024, 1024), CV_8UC3);
 	Material m0(0.8, 0.5, 0.5, 0, 0, vec3(255, 255, 0));
 	Material m1(0.8, 0.5, 0.5, 0, 0, vec3(0, 0, 255));
 	Material m2(0.8, 0.5, 0.5, 0, 0, vec3(255, 255, 255));
 	HighMaterial hM0(0.8, 0.5, 0.5, 0, 0, vec3(255, 255, 0));
-	hM0.setTexture(imread("1.png"));
+	hM0.setTexture(imread("wall.jpg"));
 	Sphere s0(vec3(12, 15, -20), 10, &m0);
 	Sphere s1(vec3(-12, 15, -20), 10, &m1);
 	Plane p0(vec3(0, 1, 0), 4, &m2);
-	Triangle triangle0(vec5(vec3(5, 5, 0),vec2(1,1)), vec5(vec3(-5, -5, 0),vec2(0,0)), vec5(vec3(5, -5, 0),vec2(1,0)), &hM0);
-	triangle0.setPosition(vec3(0, 10, -10));
-	triangle0.setTransform(mat3(vec3(1, 0, 0), vec3(0, 1, 0), vec3(0, 0, 1)));
-	triangle0.move();
+	Triangle triangle0(vec5(vec3(35, 35, 0),vec2(1,1)), vec5(vec3(-35, -35, 0),vec2(0,0)), vec5(vec3(35, -35, 0),vec2(1,0)), &hM0);
+	Triangle triangle1(vec5(vec3(35, 35, 0), vec2(1, 1)), vec5(vec3(-35, 35, 0), vec2(0, 1)), vec5(vec3(-35, -35, 0), vec2(0, 0)), &hM0);
+	//triangle0.setPosition(vec3(0, 10, -10));
+	//triangle0.setTransform(mat3(vec3(1, 0, 0), vec3(0, 1, 0), vec3(0, 0, 1)));
+	//triangle0.move();
+	Triangles wall({ triangle0,triangle1 });
+	wall.setPosition(vec3(0, 20, -30));
+	wall.setTransform(mat3(vec3(1, 0, 0), vec3(0, 1, 0), vec3(0, 0, 1)));
+	wall.move();
 	float start = clock();
 
 	for (int i = 0; i < img.rows; i++)
 	{
 		for (int j = 0; j < img.cols; j++)
 		{
-			vec3 color = render(i, j, img.rows, img.cols, { &triangle0,&s0,&s1,&p0 }, camera).color;
+			vec3 color = render(i, j, img.rows, img.cols, {&wall,&s0,&s1,&p0}, camera).color;
 			if (color.z > 255)
 				color.z = 255;
 			if (color.y > 255)
