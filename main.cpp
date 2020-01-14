@@ -106,23 +106,23 @@ int main()
 	}
 	float start = clock();
 
-	for (int i = 0; i < img.rows; i++)
-	{
-		for (int j = 0; j < img.cols; j++)
-		{
-			vec3 color = render(i, j, img.rows, img.cols, s, camera).color;
-			if (color.z > 255)
-				color.z = 255;
-			if (color.y > 255)
-				color.y = 255;
-			if (color.x > 255)
-				color.x = 255;
-			img.at<Vec3b>(i, j) = Vec3b(color.z, color.y, color.x);
-		}
-	}
+	//for (int i = 0; i < img.rows; i++)
+	//{
+	//	for (int j = 0; j < img.cols; j++)
+	//	{
+	//		vec3 color = render(i, j, img.rows, img.cols, s, camera).color;
+	//		if (color.z > 255)
+	//			color.z = 255;
+	//		if (color.y > 255)
+	//			color.y = 255;
+	//		if (color.x > 255)
+	//			color.x = 255;
+	//		img.at<Vec3b>(i, j) = Vec3b(color.z, color.y, color.x);
+	//	}
+	//}
 
 
-	/*thread t1([&]() {
+	thread t1([&]() {
 		for (int i = 0; i < img.rows/2; i++)
 		{
 			for (int j = 0; j < img.cols/2; j++)
@@ -189,7 +189,7 @@ int main()
 	t1.join();
 	t2.join();
 	t3.join();
-	t4.join();*/
+	t4.join();
 	float end = clock();
 	cout << end - start << "ms" << endl;
 	imshow("img", img);
