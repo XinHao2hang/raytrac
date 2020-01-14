@@ -36,14 +36,23 @@ Ray rayTrac(Ray ray, vector<Polygon*> s, int times)
 		return Ray(vec3(0, 0, 0), vec3(0, 0, 0), 0, vec3(0, 0, 0), nullptr);
 	//计算反射光线
 	vec3 reflectRayNormal = r.normal;
-	if (dot(r.direction , reflectRayNormal) > 0)
-		reflectRayNormal = -reflectRayNormal;
+	/*if (dot(r.direction , reflectRayNormal) > 0)
+		reflectRayNormal = -reflectRayNormal;*/
+
+	//构造折射光线
+	float itea = ((Polygon*)(r.polygon))->m->refract;
+	float cosa1 = abs(dot(r.direction ,reflectRayNormal));
+	float cosa2 = sqrt(1 - (1 / (itea * itea) * (1 - cosa1 * cosa1)));
+	Ray refractRay = Ray(normalize((1 / itea) * r.direction + (cosa1 / itea - cosa2) * reflectRayNormal), r.end.position, 0, vec3(0, 0, 0), nullptr);
+
 	//构造反射光线
 	Ray reflectRay = Ray(normalize(r.direction - (2 * dot(r.direction, reflectRayNormal)) * reflectRayNormal), r.end.position, 0, vec3(0, 0, 0), nullptr);
 	//获得反射光线方向
+	refractRay = rayTrac(refractRay, s, times - 1);
 	reflectRay = rayTrac(reflectRay, s, times - 1);
+	
 	//计算物体返回的颜色
-	r = ((Polygon*)(r.polygon))->sample(r, reflectRay, r);
+	r = ((Polygon*)(r.polygon))->sample(r, reflectRay, refractRay);
 	return r;
 }
 Ray render(int i, int j, int rows, int cols, vector<Polygon*> s, Camera cam)
@@ -61,11 +70,11 @@ int main()
 {
 	vector<Polygon*> s;
 	Camera camera(vec3(0, 10, 10), vec3(0, 0, -1), vec3(0, 1, 0), 90);
-	Mat img = Mat::zeros(Size(4096, 4096), CV_8UC3);
-	Material m0(0.8, 0.5, 0.5, 0, 0, vec3(255, 255, 0));
+	Mat img = Mat::zeros(Size(1024, 1024), CV_8UC3);
+	Material m0(0.1, 0.0, 0.0, 1.2, 0.8, vec3(255, 255, 0));
 	Material m1(0.8, 0.5, 0.5, 0, 0, vec3(0, 0, 255));
-	Material m2(0.8, 0.5, 0.5, 0, 0, vec3(255, 255, 255));
-	HighMaterial hM0(0.6, 0.5, 0.5, 0, 0, vec3(255, 255, 0));
+	Material m2(0.9, 0.5, 0.5, 1, 0, vec3(255, 255, 255));
+	HighMaterial hM0(0.6, 0.5, 0.5, 0,0, vec3(255, 255, 0));
 	
 	hM0.setTexture(imread("wall.jpg"));
 	//wall_normal.jpg
@@ -84,7 +93,7 @@ int main()
 	////triangle0.setTransform(mat3(vec3(1, 0, 0), vec3(0, 1, 0), vec3(0, 0, 1)));
 	////triangle0.move();
 	//Triangles wall({ triangle0,triangle1 });
-	//wall.setPosition(vec3(0, 20, -40));
+	//wall.setPosition(vec3(0, 20, -20));
 	//wall.setTransform(mat3(vec3(1, 0, 0), vec3(0, 1, 0), vec3(0, 0, 1)));
 	//wall.move();
 	//s.push_back(&wall);
@@ -104,6 +113,9 @@ int main()
 		}
 		
 	}
+
+	Triangles box;
+
 	float start = clock();
 
 	//for (int i = 0; i < img.rows; i++)

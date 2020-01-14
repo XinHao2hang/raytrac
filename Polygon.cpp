@@ -10,6 +10,8 @@ Ray Polygon::sample(Ray out, Ray reflect, Ray refract)
 	//·´ÉäÑÕÉ«¼ÆËã
 	if(reflect.polygon)
 		res.color += reflect.color * m->specular;
+	if (refract.polygon)
+		res.color += refract.color + m->transparent;
 	return res;
 }
 
