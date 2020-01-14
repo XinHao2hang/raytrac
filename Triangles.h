@@ -5,8 +5,9 @@
 using namespace std;
 class Triangles : public Polygon
 {
-	vector<Triangle> triangles;
+	
 public:
+	vector<Triangle> triangles;
 	Triangles();
 	Triangles(vector<Triangle> tr) 
 	{
