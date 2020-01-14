@@ -73,15 +73,16 @@ int main()
 	Mat img = Mat::zeros(Size(1024, 1024), CV_8UC3);
 	Material m0(0.1, 0.0, 0.0, 1.2, 0.8, vec3(255, 255, 0));
 	Material m1(0.8, 0.5, 0.5, 0, 0, vec3(0, 0, 255));
-	Material m2(0.9, 0.5, 0.5, 1, 0, vec3(255, 255, 255));
+	Material m2(0.9, 0.5, 0.5, 0, 0, vec3(255, 255, 255));
+	Material m3(0.1, 0.0, 0.0, 1.1, 0.8, vec3(255, 255, 255));
 	HighMaterial hM0(0.6, 0.5, 0.5, 0,0, vec3(255, 255, 0));
 	
 	hM0.setTexture(imread("wall.jpg"));
 	//wall_normal.jpg
 	hM0.setNormalTexture(imread("wall_normal.jpg"));
 	hM0.hasNormalTexture = true;
-	Sphere s0(vec3(12, 15, -20), 10, &m0);
-	Sphere s1(vec3(-12, 15, -20), 10, &m1);
+	Sphere s0(vec3(12, 15, -30), 10, &m0);
+	Sphere s1(vec3(-12, 15, -30), 10, &m1);
 	Plane p0(vec3(0, 1, 0), 4, &m2);
 	s.push_back(&s0);
 	s.push_back(&s1);
@@ -114,7 +115,28 @@ int main()
 		
 	}
 
-	Triangles box;
+
+	Triangle tr0 = Triangle(vec5(vec3(-5,5,5),vec2(0,1)), vec5(vec3(-5, -5, 5), vec2(0, 0)), vec5(vec3(5, -5, 5),vec2(1, 0)),&m3);
+	Triangle tr1 = Triangle(vec5(vec3(5, -5, 5), vec2(1, 0)), vec5(vec3(5, 5, 5), vec2(1, 1)), vec5(vec3(-5, 5, 5), vec2(0, 1)), &m3);
+	Triangle tr2 = Triangle(vec5(vec3(-5, -5, 5), vec2(1, 0)), vec5(vec3(-5, 5, 5), vec2(1, 1)), vec5(vec3(-5, -5, -5), vec2(0, 0)), &m3);
+	Triangle tr3 = Triangle(vec5(vec3(-5, -5, -5), vec2(0, 0)), vec5(vec3(-5, 5, 5), vec2(1, 1)), vec5(vec3(-5, 5, -5), vec2(0, 1)), &m3);
+	Triangle tr4 = Triangle(vec5(vec3(5, 5, 5), vec2(0, 1)), vec5(vec3(5, -5, 5), vec2(0, 0)), vec5(vec3(5, -5, -5), vec2(1, 0)), &m3);
+	Triangle tr5 = Triangle(vec5(vec3(5, 5, 5), vec2(0, 1)), vec5(vec3(5, -5, -5), vec2(1, 0)), vec5(vec3(5, 5, -5), vec2(1, 1)), &m3);
+	Triangle tr6 = Triangle(vec5(vec3(5, 5, -5), vec2(0, 1)), vec5(vec3(5, -5, 5), vec2(0, 0)), vec5(vec3(-5, 5, -5), vec2(1, 1)), &m3);
+	Triangle tr7 = Triangle(vec5(vec3(-5, 5, -5), vec2(1, 1)), vec5(vec3(5, -5, -5), vec2(0, 0)), vec5(vec3(-5, -5, -5), vec2(1, 0)), &m3);
+	Triangle tr8 = Triangle(vec5(vec3(5, 5, 5), vec2(1, 1)), vec5(vec3(5, 5, -5), vec2(1, 0)), vec5(vec3(-5, 5, 5), vec2(0, 1)), &m3);
+
+	Triangle tr9 = Triangle(vec5(vec3(-5, 5, 5), vec2(0, 1)), vec5(vec3(5, 5, -5), vec2(1, 0)), vec5(vec3(-5, 5, -5), vec2(0, 0)), &m3);
+	Triangle tr10 = Triangle(vec5(vec3(5, -5, 5), vec2(0, 0)), vec5(vec3(-5, -5, 5), vec2(1, 0)), vec5(vec3(5, -5, -5), vec2(0, 1)), &m3);
+	Triangle tr11 = Triangle(vec5(vec3(-5, -5, 5), vec2(1, 0)), vec5(vec3(-5, -5, -5), vec2(1, 1)), vec5(vec3(5, -5, -5), vec2(0, 1)), &m3);
+	
+
+	Triangles box({tr0,tr1,tr2,tr3,tr4,tr5,tr6,tr7,tr8,tr9,tr10,tr11});
+	box.setPosition(vec3(-10, 8, -10));
+	box.setTransform(mat3(vec3(1, 0, 0), vec3(0, 1, 0), vec3(0, 0, 1)));
+	box.move();
+	s.push_back(&box);
+
 
 	float start = clock();
 
