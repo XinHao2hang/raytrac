@@ -24,13 +24,15 @@ void Triangle::setTransform(mat3 _mat)
 
 void Triangle::move()
 {
-	wA = transforms * A.position + position;
-	wB = transforms * B.position + position;
-	wC = transforms * C.position + position;
-	//更新平面参数
-	normal_distance = dot(normal, wA.position);
+	wA = A.position*transforms  + position;
+	wB = B.position*transforms  + position;
+	wC = C.position*transforms  + position;
+
 	//更新法向量
 	normal = normalize(cross(wA.position - wB.position, wB.position - wC.position));
+	//更新平面参数
+	normal_distance = dot(normal, wA.position);
+	
 }
 Ray Triangle::intersect(Ray ray)
 {
@@ -133,7 +135,23 @@ mat3 Triangle::getTBN(vec5 _A, vec5 _B, vec5 _C)
 	
 	vec3 N = cross(E1, E2);
 	E2 = cross(E1,N);
-	return (mat3(normalize(E1),normalize(E2),normalize(N)));//返回左乘变换矩阵
+	return  (mat3(normalize(E1),normalize(E2),normalize(N)));//返回左乘变换矩阵
+
+	/*vec2 u = _B.textureUV - _A.textureUV;
+	vec2 v = _C.textureUV - _B.textureUV;
+	vec3 AB = wB.position - wA.position;
+	vec3 BC = wC.position - wB.position;
+
+	vec3 U = vec3(u.x,u.y,0);
+	vec3 V = vec3(v.x,v.y,0);
+	vec3 N = cross(U,V);
+	mat3 tbn = mat3(normalize(U), normalize(V), -abs(normalize(N)));
+	N = normalize(cross(AB,BC));
+	vec3 T = normalize(AB);
+	vec3 B = normalize(cross(AB,N));
+
+	mat3 TBN = mat3(T,B,N);
+	return TBN * transpose(tbn);*/
 }
 
 Triangle::~Triangle()

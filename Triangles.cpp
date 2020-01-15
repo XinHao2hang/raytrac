@@ -9,13 +9,21 @@ Triangles::Triangles()
 Ray Triangles::intersect(Ray ray)
 {
 	//一束光线只能在同一时间打在这个物体的一个位置上
+	float min = FLT_MAX;
+	Ray ret;
 	for (int i = 0; i < triangles.size(); i++)
 	{
 		//光线打在物体上，返回的是光线到物体的信息
 		Ray r = triangles[i].intersect(ray);
-		if (r.polygon != nullptr)
-			return r;
+		if (r.polygon != nullptr && r.distance < min)
+		{
+			min = r.distance;
+			ret = r;
+			//return r;
+		}
 	}
+	if (ret.polygon != nullptr)
+		return ret;
 	return Ray(ray.direction, ray.position, ray.intensity, ray.color, nullptr);
 }
 
