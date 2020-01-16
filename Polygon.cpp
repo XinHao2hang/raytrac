@@ -9,7 +9,7 @@ Ray Polygon::sample(Ray out, Ray reflect, Ray refract)
 	res.color = m->getColor(out.end.textureUV) * m->light * std::fmaxf(cosa,0);
 	//·´ÉäÑÕÉ«¼ÆËã
 	if(reflect.polygon)
-		res.color += reflect.color * m->specular;
+		res.color += reflect.color * m->getSpecular(out.end.textureUV);
 	if (refract.polygon)
 		res.color += refract.color + m->transparent;
 	return res;

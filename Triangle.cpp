@@ -27,7 +27,6 @@ void Triangle::move()
 	wA = A.position*transforms  + position;
 	wB = B.position*transforms  + position;
 	wC = C.position*transforms  + position;
-
 	//更新法向量
 	normal = normalize(cross(wA.position - wB.position, wB.position - wC.position));
 	//更新平面参数

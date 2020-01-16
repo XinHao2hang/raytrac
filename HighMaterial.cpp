@@ -32,6 +32,15 @@ vec3 HighMaterial::getNormal(vec2 uv)
 	return normalize(tnormal);
 }
 
+float HighMaterial::getSpecular(vec2 uv)
+{
+	if (speculars.cols <= 0)
+		return specular;
+	int j = abs((int(uv.x * speculars.cols)) % speculars.cols);
+	int i = abs((int(uv.y * speculars.rows)) % speculars.rows);
+	return speculars.at<uchar>(i, j)*1.0/255.0;
+}
+
 
 
 

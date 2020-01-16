@@ -24,6 +24,7 @@ public:
 
 	virtual vec3 getColor(vec2 uv) { return color; }
 	virtual vec3 getNormal(vec2 uv) { return vec3(0,0,0); }
+	virtual float getSpecular(vec2 uv) { return specular; }
 	~Material();
 };
 

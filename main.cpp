@@ -81,14 +81,14 @@ int main()
 
 
 	hM0.setTexture(imread("tp07f_DIFF.jpg"));
-	//wall_normal.jpg
 	hM0.setNormalTexture(imread("tp07b_NORM.jpg"));
+	hM0.setSpecularTexture(imread("tp07d_DIFF.jpg"));
 	hM0.hasNormalTexture = true;
 
 	HighMaterial hM1(0.8, 0.5, 0.0, 0, 0, vec3(0, 0, 0));
 	hM1.setTexture(imread("1.png"));
-	//wall_normal.jpg
 	hM1.setNormalTexture(imread("1a.jpg"));
+	hM1.setSpecularTexture(imread("11b.jpg"));
 	hM1.hasNormalTexture = true;
 
 
@@ -123,7 +123,6 @@ int main()
 			wall[i][j].move();
 			s.push_back(&wall[i][j]);
 		}
-
 	}
 
 	Triangle triangle2(vec5(vec3(15, 0, 15), vec2(1, 1)), vec5(vec3(-15, 0, -15), vec2(0, 0)), vec5(vec3(15, 0, -15), vec2(1, 0)), &hM0);
@@ -150,7 +149,6 @@ int main()
 	Triangle tr6 = Triangle(vec5(vec3(5, 5, -5), vec2(0, 1)), vec5(vec3(5, -5, -5), vec2(0, 0)), vec5(vec3(-5, 5, -5), vec2(1, 1)), &m3);
 	Triangle tr7 = Triangle(vec5(vec3(-5, 5, -5), vec2(1, 1)), vec5(vec3(5, -5, -5), vec2(0, 0)), vec5(vec3(-5, -5, -5), vec2(1, 0)), &m3);
 	Triangle tr8 = Triangle(vec5(vec3(5, 5, 5), vec2(1, 1)), vec5(vec3(5, 5, -5), vec2(1, 0)), vec5(vec3(-5, 5, 5), vec2(0, 1)), &m3);
-
 	Triangle tr9 = Triangle(vec5(vec3(-5, 5, 5), vec2(0, 1)), vec5(vec3(5, 5, -5), vec2(1, 0)), vec5(vec3(-5, 5, -5), vec2(0, 0)), &m3);
 	Triangle tr10 = Triangle(vec5(vec3(5, -5, 5), vec2(0, 0)), vec5(vec3(-5, -5, 5), vec2(1, 0)), vec5(vec3(5, -5, -5), vec2(0, 1)), &m3);
 	Triangle tr11 = Triangle(vec5(vec3(-5, -5, 5), vec2(1, 0)), vec5(vec3(-5, -5, -5), vec2(1, 1)), vec5(vec3(5, -5, -5), vec2(0, 1)), &m3);
@@ -172,10 +170,10 @@ int main()
 	tr7 = Triangle(vec5(vec3(-5, 5, -5), vec2(1, 1)), vec5(vec3(5, -5, -5), vec2(0, 0)), vec5(vec3(-5, -5, -5), vec2(1, 0)), &hM1);
 	tr8 = Triangle(vec5(vec3(5, 5, 5), vec2(1, 1)), vec5(vec3(-5, 5, -5), vec2(0, 0)), vec5(vec3(5, 5, -5), vec2(1, 0)), &hM1);
 	tr9 = Triangle(vec5(vec3(-5, 5, 5), vec2(0, 1)), vec5(vec3(-5, 5, -5), vec2(0, 0)), vec5(vec3(5, 5, 5), vec2(1, 1)), &hM1);
-	tr10 = Triangle(vec5(vec3(5, -5, 5), vec2(1, 1)), vec5(vec3(-5, -5, 5), vec2(1, 0)), vec5(vec3(5, -5, -5), vec2(0, 1)), &hM1);
-	tr11 = Triangle(vec5(vec3(-5, -5, -5), vec2(0, 0)),  vec5(vec3(-5, -5, 5), vec2(0, 1)), vec5(vec3(5, -5, -5), vec2(1, 0)), &hM1);
+	tr10 = Triangle(vec5(vec3(5, -5, 5), vec2(1, 1)), vec5(vec3(5, -5, -5), vec2(0, 1)), vec5(vec3(-5, -5, 5), vec2(1, 0)),  &hM1);
+	tr11 = Triangle(vec5(vec3(-5, -5, -5), vec2(0, 0)),  vec5(vec3(-5, -5, 5), vec2(1, 0)), vec5(vec3(5, -5, -5), vec2(0, 1)), &hM1);
 
-	Triangles box1({tr0,tr1,tr2,tr3, tr4,tr5,tr6,tr7,tr9,tr8, tr10,tr11});
+	Triangles box1({ tr0,tr1,tr2,tr3,tr4,tr5,tr6,tr7,tr8,tr9,tr10,tr11 });
 	box1.setPosition(vec3(-10, 20, -10));
 	box1.setTransform(angle(vec3(0,70,0)));
 	box1.move();
@@ -268,7 +266,7 @@ int main()
 	t3.join();
 	t4.join();
 	float end = clock();
-	cout << end - start << "ms" << endl;
+	cout << (end - start)/ CLOCKS_PER_SEC << "s" << endl;
 	imshow("img", img);
 	imwrite("1.jpg", img);
 	waitKey(0);
